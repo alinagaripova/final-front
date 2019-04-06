@@ -1,0 +1,133 @@
+.dialogues-box {
+    float: left;
+    width: 35%;
+    max-width: 400px;
+    height: 500px;
+    border: lightgray solid 1px;
+}
+header {
+    height: 50px;
+    background-color: lightgray;
+}
+#search {
+    float: left;
+    width: 53%;
+    height: 38px;
+    margin-top: 1%;
+    border-radius: 5px;
+    vertical-align: center;
+}
+.start-chat {
+    float: left;
+    margin: 1%;
+    width: 45%;
+    height: 38px;
+    vertical-align: center;
+}
+.dropdown-menu img {
+    height: 20px;
+    width: 20px;
+    margin-right: 5px;
+}
+.dialogues-block {
+    float: left;
+    margin: 0;
+    width: 399px;
+    max-width: 100%;
+}
+.dialogues-list {
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+
+}
+[data-class=dialogues-element] {
+    list-style: none;
+    display: block;
+    height: 50px;
+    border-bottom: lightgray solid 1px;
+}
+[data-class=dialogues-element]:hover {
+    background-color: lightgray;
+}
+[data-id=img] {
+    height: 40px;
+    width: 40px;
+    margin: 5px;
+}
+[data-id=name] {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 5px;
+}
+.chat {
+    float: left;
+    width: 64%;
+    max-width: 800px;
+    height: 500px;
+    border: lightgray solid 1px;
+    border-left: none;
+    position: relative;
+    padding: 0;
+    /*overflow: auto;*/
+}
+.center {
+    overflow-y: auto;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 40px;
+}
+footer{
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    height: 40px;
+    background-color: lightgray;
+}
+footer form {
+    width: 100%;
+}
+
+footer input{
+    display: inline-block;
+    float: left;
+    max-height: 30px;
+    min-width: 78%;
+    margin: 1%;
+}
+
+footer button {
+    display: inline-block;
+    float: left;
+    min-width: 20%;
+    margin: 0;
+    height: 40px;
+    padding: 1px 3px;
+}
+.you-block {
+    text-align: right;
+    margin: 1% 1% 1% 30%;
+    word-wrap: break-word;
+}
+.you-text {
+    display: inline-block;
+    background-color: lightblue;
+    border: lightgray solid 1px;
+    border-radius: 5px;
+    padding: 1%;
+}
+.companion-block {
+    text-align: left;
+    margin: 1% 30% 1% 1%;
+    word-wrap: break-word;
+}
+.companion-text {
+    display: inline-block;
+    background-color: lightyellow;
+    border: lightgray solid 1px;
+    border-radius: 5px;
+    padding: 1%;
+}
+
