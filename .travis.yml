@@ -7,7 +7,7 @@ install:
 after_success:
   - npm run coverage && npx codecov
   - mkdir dist
-  - cp -R src/index.html src/js dist
+  - cp -R src/index.html src/js src/img src/css dist
 deploy:
   provider: pages
   skip_cleanup: true
