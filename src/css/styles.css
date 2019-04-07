@@ -1,26 +1,44 @@
+body {
+    background: #e3e2df;
+}
+.all-block {
+    max-width: 1200px;
+    margin: 2% auto auto;
+    background-color: white;
+    height: 70%;
+}
 .dialogues-box {
     float: left;
     width: 35%;
     max-width: 400px;
-    height: 500px;
+    height: 600px;
     border: lightgray solid 1px;
+    min-width: 100px;
+    background-color: white;
+    border-radius: 10px;
 }
 header {
     height: 50px;
-    background-color: lightgray;
+    background-color: #d7dde5;
 }
-#search {
+.profile {
     float: left;
-    width: 53%;
+    /*width: 53%;*/
     height: 38px;
     margin-top: 1%;
     border-radius: 5px;
     vertical-align: center;
 }
+.profile img {
+    height: 40px;
+    width: 40px;
+    margin-left: 40px;
+    margin-right: 5px;
+}
 .start-chat {
     float: left;
-    margin: 1%;
-    width: 45%;
+    margin: 5px;
+    width: 50%;
     height: 38px;
     vertical-align: center;
 }
@@ -64,11 +82,14 @@ header {
     float: left;
     width: 64%;
     max-width: 800px;
-    height: 500px;
+    min-width: 100px;
+    height: 600px;
     border: lightgray solid 1px;
     border-left: none;
     position: relative;
     padding: 0;
+    background-color: white;
+    border-radius: 10px;
     /*overflow: auto;*/
 }
 .center {
@@ -78,13 +99,14 @@ header {
     left: 0;
     right: 0;
     bottom: 40px;
+    background-image: url("../img/f8.jpg");
 }
 footer{
     position: absolute;
     width: 100%;
     bottom: 0;
     height: 40px;
-    background-color: lightgray;
+    background-color: #d7dde5;
 }
 footer form {
     width: 100%;
@@ -113,7 +135,7 @@ footer button {
 }
 .you-text {
     display: inline-block;
-    background-color: lightblue;
+    background-color: #b7dbf5;
     border: lightgray solid 1px;
     border-radius: 5px;
     padding: 1%;
