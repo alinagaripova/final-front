@@ -97,6 +97,24 @@ li [data-id=img] {
     border-radius: 10px;
     /*overflow: auto;*/
 }
+.chat .pre {
+    text-align: center;
+    vertical-align: center;
+    margin: 20% auto;
+}
+.chat .pre-h1 {
+    font-family: Trattatello, fantasy;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: #6c757d;
+}
+.chat .pre-p {
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+    color: #6c757d;
+}
+.chat .pre-img {
+    color: #6c757d;
+}
 [data-class=chat-title] [data-id=img] {
     height: 40px;
     width: 40px;
@@ -159,6 +177,8 @@ footer button {
 .you-text .time {
     white-space: pre-wrap;
     color: darkgray;
+    display: inline-block;
+    float: right;
 }
 .companion-block {
     text-align: left;
@@ -176,5 +196,7 @@ footer button {
 .companion-text .time {
     white-space: pre-wrap;
     color: darkgray;
+    display: inline-block;
+    float: right;
 }
 

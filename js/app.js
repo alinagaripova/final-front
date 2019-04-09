@@ -92,7 +92,7 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId) {       
             <input data-id="message-text2"  class="form-control" type="text" placeholder="Введите сообщение" autofocus>
             <button data-id="send2" class="btn btn-secondary">Отправить</button>
         </form>
-    `;                                                                //первый отправитель(you), второй(собеседник)
+    `;                                              //первый отправитель(you), второй(собеседник)
     chatEl.appendChild(headerEl);
     chatEl.appendChild(footerEl);
     chatEl.appendChild(centerEl);
