@@ -7,9 +7,10 @@ export class Dialogue {                         //чат
 }
 
 export class Message {                          //сообщение
-    constructor(name, text, id) {
-        this.name = name;    //моё
+    constructor(name, text, id, time) {
+        this.name = name;
         this.text = text;
         this.id = id;
+        this.time = time;
     }
 }
