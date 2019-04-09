@@ -101,9 +101,11 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId) {       
     const messageTextEl = footerEl.querySelector('[data-id=message-text]');
 
     sendEl.addEventListener('submit', async (evt) => {        //событие на кнопке 'отправить' сообщение
-        evt.preventDefault();                                        //первый инпут(you)
+        evt.preventDefault();                                              //первый инпут(you)
         const messageText = messageTextEl.value;
-        const message = new Message('Алина', messageText, itemId);
+        const date = new Date();
+        const time = date.getHours() + ':' + date.getMinutes();
+        const message = new Message('Алина', messageText, itemId, time);
 
         if (messageText !== '') {
             await http.saveMessageList(message);
@@ -118,7 +120,9 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId) {       
     send2El.addEventListener('submit', async (evt) => {        //второй инпут(собеседник)
         evt.preventDefault();
         const messageText2 = messageText2El.value;
-        const message2 = new Message(itemName, messageText2, itemId);
+        const date = new Date();
+        const time = date.getHours() + ':' + date.getMinutes();
+        const message2 = new Message(itemName, messageText2, itemId, time);
 
         if (messageText2 !== '') {
             // messageList.add(message2);
@@ -147,7 +151,7 @@ async function rebuildMessageList(centerEl, messageList, itemId, itemName) {//с
                 divEl.className = 'companion-block';
                 divEl.innerHTML = `
                 <div class="companion-text">
-                    <span>${item.name}: ${item.text}</span>
+                    <span>${item.name}: ${item.text}</span><span class="time">     ${item.time}</span>
                 </div>
             `;
                 centerEl.appendChild(divEl);
@@ -156,7 +160,7 @@ async function rebuildMessageList(centerEl, messageList, itemId, itemName) {//с
                 divEl.className = 'you-block';
                 divEl.innerHTML = `
                 <div class="you-text">
-                    <span>You: ${item.text}</span>
+                    <span>You: ${item.text}</span><span class="time">     ${item.time}</span>
                 </div>
             `;
                 centerEl.appendChild(divEl);
