@@ -166,8 +166,6 @@ async function rebuildMessageList(centerEl, messageList, itemId, itemName) {//с
                 centerEl.appendChild(divEl);
             }
         }
-        const last = centerEl.lastChild;
-        console.log(last);
     }
 }
 
