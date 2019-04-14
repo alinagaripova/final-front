@@ -2,16 +2,57 @@ import {Dialogue, Message} from "./lib.js";
 import {checkDialogues} from "./valid.js";
 import {Http} from './http.js';
 
-// const http = new Http('http://localhost:2525');
-const http = new Http('https://final-project-aln.herokuapp.com');
-const startChatEl = document.querySelector('.start-chat');
+const http = new Http('http://localhost:2525');
+// const http = new Http('https://final-project-aln.herokuapp.com');
+// const startChatEl = document.querySelector('.start-chat');
+const usersMenuEl = document.querySelector('.users-menu');
+const usersEl = document.querySelector('.cusers');
+const companionsEl = document.querySelector('.companions');
 const dialogueListEl = document.querySelector('.dialogues-list');
-const companionEl = document.querySelectorAll('.companion');
+// const companionEl = document.querySelectorAll('.companion');
 const chatEl = document.querySelector('.chat');
 
-const companions = Array.from(companionEl);
+// const companions = Array.from(companionEl);
 let dialogueList = [];
 let messageList =[];
+let userList =[];
+
+async function loadUsers() {
+    try {
+        const response = await http.getUsers();
+        userList = await response.json();
+
+        buildUserList(usersMenuEl, userList);
+    } catch (e) {
+        // e -> ошибка
+        console.log(e);
+    } finally {
+        console.log('Список диалогов загружен');
+    }
+}
+loadUsers();
+
+function buildUserList(usersMenuEl, userList) {
+    for (const item of userList) {
+        const spanEl = document.createElement('span');
+        spanEl.className = 'dropdown-item user';
+        spanEl.id = item.id;
+        spanEl.innerHTML = `
+        <img alt="img" src="${item.image}">${item.name}
+        `;
+        usersMenuEl.appendChild(spanEl);
+
+        spanEl.addEventListener('click',(evt) => {
+            evt.preventDefault();
+            rebuildUsersAndCompanions (companionsEl)
+
+        });
+    }
+}
+
+// const user = document.querySelectorAll('.user');
+// const users = Array.from(user);
+// console.log(users);
 
 async function loadData() {
     try {
@@ -25,9 +66,8 @@ async function loadData() {
         // e -> ошибка
         console.log(e);
     } finally {
-        console.log('we finished');
+        console.log('Список диалогов загружен');
     }
-
 }
 
 let id = 0;
@@ -137,7 +177,6 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId) {       
 
 async function rebuildMessageList(centerEl, messageList, itemId, itemName) {//создание листа сообщений
     const response2 = await http.getMessageList();
-    console.log(response2);
     messageList = await response2.json();
     console.log(messageList);
 

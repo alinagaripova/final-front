@@ -3,6 +3,10 @@ export class Http {
         this.url = url;
     }
 
+    getUsers() {
+        return fetch(`${this.url}/users`);
+    }
+
     saveDialogueList(item) {
         return fetch(`${this.url}/dialoguelist`, {
             body: JSON.stringify(item),

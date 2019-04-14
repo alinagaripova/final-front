@@ -14,21 +14,14 @@
 <div class="all-block">
     <div class="dialogues-box">
         <header>
-            <div class="profile">
-                <img src="img/aln.jpg">
-            </div>
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle start-chat" type="button" id="dropdownMenuButton"
+            <div class="users dropdown">
+                <button class="btn btn-secondary dropdown-toggle select-user" type="button" id="dropdownMenuButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Начать чат с:
+                    <img src="img/addUser2.png">
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <span class="dropdown-item companion"><img src="img/1.jpg">Миша</span>
-                    <span class="dropdown-item companion"><img src="img/4.jpg">Миша</span>
-                    <span class="dropdown-item companion"><img src="img/2.png">Саша</span>
-                    <span class="dropdown-item companion"><img src="img/3.jpg">Алиса</span>
-                </div>
+                <div class="dropdown-menu users-menu" aria-labelledby="dropdownMenuButton"></div>
             </div>
+            <div class="companions"></div>
         </header>
         <div class="dialogues-block">
             <ul class="dialogues-list"></ul>
