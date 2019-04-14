@@ -6,10 +6,9 @@ const http = new Http('http://localhost:2525');
 // const http = new Http('https://final-project-aln.herokuapp.com');
 // const startChatEl = document.querySelector('.start-chat');
 const usersMenuEl = document.querySelector('.users-menu');
-const usersEl = document.querySelector('.cusers');
-const companionsEl = document.querySelector('.companions');
+const usersEl = document.querySelector('.users');
+const companionsListEl = document.querySelector('.companions-list');
 const dialogueListEl = document.querySelector('.dialogues-list');
-// const companionEl = document.querySelectorAll('.companion');
 const chatEl = document.querySelector('.chat');
 
 // const companions = Array.from(companionEl);
@@ -32,7 +31,7 @@ async function loadUsers() {
 }
 loadUsers();
 
-function buildUserList(usersMenuEl, userList) {
+function buildUserList(usersMenuEl, userList) {                                  //создание списка пользователей
     for (const item of userList) {
         const spanEl = document.createElement('span');
         spanEl.className = 'dropdown-item user';
@@ -42,18 +41,56 @@ function buildUserList(usersMenuEl, userList) {
         `;
         usersMenuEl.appendChild(spanEl);
 
-        spanEl.addEventListener('click',(evt) => {
+        spanEl.addEventListener('click',(evt) => {                   //выбор пользователя из списка
             evt.preventDefault();
-            rebuildUsersAndCompanions (companionsEl)
+
+            rebuildUsersAndCompanions(usersEl, evt.currentTarget, userList);
 
         });
     }
 }
+function rebuildUsersAndCompanions(usersEl, evtCurrentTarget, userList) {        //прописывается выбранный юзер и создается список собеседников
+    usersEl.innerHTML = '';
+    usersEl.appendChild(evtCurrentTarget);
 
-// const user = document.querySelectorAll('.user');
-// const users = Array.from(user);
-// console.log(users);
+    const buttonEl = document.createElement('button');
+    buttonEl.id = 'dropdownMenuButton';
+    buttonEl.className = 'btn btn-secondary dropdown-toggle start-chat';
+    buttonEl.setAttribute('type', 'button');
+    buttonEl.setAttribute('data-toggle', 'dropdown');
+    buttonEl.setAttribute('aria-haspopup', 'true');
+    buttonEl.setAttribute('aria-labelledby', 'dropdownMenuButton');
+    buttonEl.innerHTML = `Начать чат с:`;
+    const divEl = document.createElement('div');
+    divEl.className = 'dropdown-menu companions-list';
+    divEl.setAttribute('aria-labelledby', 'dropdownMenuButton');
+    usersEl.appendChild(buttonEl);
+    usersEl.appendChild(divEl);
 
+    const companionsListEl = document.querySelector('.companions-list');
+    for (const item of userList) {
+        if (evtCurrentTarget.id != item.id){
+            const spanEl = document.createElement('span');
+            spanEl.className = 'dropdown-item companion';
+            spanEl.id = item.id;
+            spanEl.innerHTML = `
+        <img alt="img" src="${item.image}">${item.name}
+        `;
+            companionsListEl.appendChild(spanEl);
+
+            const dialogue = new Dialogue(item.name, item.image, item.id);
+            spanEl.addEventListener('click', async(evt) => {
+                if (checkDialogues(item.id, dialogueList) > 0) {                           //проверяет существует ли такой чат
+                    console.log('Такой чат уже существует');
+                } else {
+                    await http.saveDialogueList(dialogue);                            //добавляет чат в список чатов
+                }
+                await loadData();
+                createChat(dialogueList, chatEl, item.image, item.name, item.id);
+            });
+        }
+    }
+}
 async function loadData() {
     try {
         const response = await http.getDialogue();
@@ -68,29 +105,6 @@ async function loadData() {
     } finally {
         console.log('Список диалогов загружен');
     }
-}
-
-let id = 0;
-for (const companion of companions) {
-    id++;
-    companion.setAttribute('data-id', id);
-
-    const name = companion.textContent;
-    const image = companion.children[0].attributes[0].textContent;    //адрес картинки
-    const dialogue = new Dialogue(name, image, id);
-
-    companion.addEventListener('click', async (evt) => {      //при клике создается новый чат
-        let id = companion.attributes[1].value;
-        console.log(id);
-
-        if (checkDialogues(id, dialogueList) > 0) {                 //проверяет существует ли такой чат
-            console.log('Такой чат уже существует');
-        } else {
-            await http.saveDialogueList(dialogue);  //добавляет чат в список чатов
-        }
-        await loadData();
-        createChat(dialogueList, chatEl, image, name, id);
-    })
 }
 
 function rebuildDialogueList(dialogueListEl, dialogueList1) {                //создание списка диалогов
@@ -178,7 +192,6 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId) {       
 async function rebuildMessageList(centerEl, messageList, itemId, itemName) {//создание листа сообщений
     const response2 = await http.getMessageList();
     messageList = await response2.json();
-    console.log(messageList);
 
     if (messageList == null) {
         messageList = [];
