@@ -1,16 +1,18 @@
 export class Dialogue {                         //чат
-    constructor(name, image, id) {
+    constructor(name, image, id, userId) {
         this.name = name;
         this.image = image;
-        this.id = id;
+        this.id = id;               //id собеседника
+        this.userId = userId;       //id пользователя  TODO: добавил userID в диалогЛист
+
     }
 }
 
 export class Message {                          //сообщение
-    constructor(name, text, id, time) {
-        this.name = name;
+    constructor(text, id, userId, time) {
         this.text = text;
-        this.id = id;
+        this.id = id;               //id собеседника
+        this.userId = userId;       //id пользователя
         this.time = time;
     }
 }

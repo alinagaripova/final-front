@@ -13,9 +13,10 @@ const chatEl = document.querySelector('.chat');
 
 // const companions = Array.from(companionEl);
 let dialogueList = [];
-let messageList =[];
-let userList =[];
+let messageList = [];
+let userList = [];
 
+//todo: оставлять того же пользователя после обновления стр
 async function loadUsers() {
     try {
         const response = await http.getUsers();
@@ -29,6 +30,7 @@ async function loadUsers() {
         console.log('Список диалогов загружен');
     }
 }
+
 loadUsers();
 
 function buildUserList(usersMenuEl, userList) {                                  //создание списка пользователей
@@ -41,17 +43,17 @@ function buildUserList(usersMenuEl, userList) {                                 
         `;
         usersMenuEl.appendChild(spanEl);
 
-        spanEl.addEventListener('click',(evt) => {                   //выбор пользователя из списка
+        spanEl.addEventListener('click', (evt) => {                 //событие выбор пользователя из списка
             evt.preventDefault();
-
+            loadData();
             rebuildUsersAndCompanions(usersEl, evt.currentTarget, userList);
-
         });
     }
 }
-function rebuildUsersAndCompanions(usersEl, evtCurrentTarget, userList) {        //прописывается выбранный юзер и создается список собеседников
+
+function rebuildUsersAndCompanions(usersEl, evtCurrentTarget, userList) {
     usersEl.innerHTML = '';
-    usersEl.appendChild(evtCurrentTarget);
+    usersEl.appendChild(evtCurrentTarget);                                      //прописывается выбранный юзер
 
     const buttonEl = document.createElement('button');
     buttonEl.id = 'dropdownMenuButton';
@@ -68,8 +70,8 @@ function rebuildUsersAndCompanions(usersEl, evtCurrentTarget, userList) {       
     usersEl.appendChild(divEl);
 
     const companionsListEl = document.querySelector('.companions-list');
-    for (const item of userList) {
-        if (evtCurrentTarget.id != item.id){
+    for (const item of userList) {                                              //создается список выбора собеседника
+        if (evtCurrentTarget.id != item.id) {
             const spanEl = document.createElement('span');
             spanEl.className = 'dropdown-item companion';
             spanEl.id = item.id;
@@ -77,20 +79,24 @@ function rebuildUsersAndCompanions(usersEl, evtCurrentTarget, userList) {       
         <img alt="img" src="${item.image}">${item.name}
         `;
             companionsListEl.appendChild(spanEl);
-
-            const dialogue = new Dialogue(item.name, item.image, item.id);
-            spanEl.addEventListener('click', async(evt) => {
-                if (checkDialogues(item.id, dialogueList) > 0) {                           //проверяет существует ли такой чат
+            const dialogue = new Dialogue(item.name, item.image, item.id, evtCurrentTarget.id);
+            const userName = evtCurrentTarget.textContent.trim();
+            const userImg = 'img/' + evtCurrentTarget.firstElementChild.src.split('/').pop();
+            const dialogue2 = new Dialogue(userName, userImg, evtCurrentTarget.id, item.id);
+            spanEl.addEventListener('click', async (evt) => {
+                if (checkDialogues(item.id, evtCurrentTarget.id, dialogueList) > 0) {       //проверяет существует ли такой чат
                     console.log('Такой чат уже существует');
                 } else {
-                    await http.saveDialogueList(dialogue);                            //добавляет чат в список чатов
+                    await http.saveDialogueList(dialogue);                                 //добавляет чат в список чатов
+                    await http.saveDialogueList(dialogue2);                                //добавляет чат в список чатов
                 }
                 await loadData();
-                createChat(dialogueList, chatEl, item.image, item.name, item.id);
+                createChat(dialogueList, chatEl, item.image, item.name, item.id, evtCurrentTarget.id);
             });
         }
     }
 }
+
 async function loadData() {
     try {
         const response = await http.getDialogue();
@@ -107,26 +113,29 @@ async function loadData() {
     }
 }
 
-function rebuildDialogueList(dialogueListEl, dialogueList1) {                //создание списка диалогов
+function rebuildDialogueList(dialogueListEl, dialogueList1) {                               //создание списка диалогов
+    const userId = document.querySelector('.user').id;
     dialogueListEl.innerHTML = ' ';
     for (const item of dialogueList1) {
-        const liEl = document.createElement('li');
-        liEl.setAttribute('data-class', 'dialogues-element');
-        liEl.setAttribute('data-id', item.id);
-        liEl.innerHTML = `
+        if (userId == item.userId) {
+            const liEl = document.createElement('li');
+            liEl.setAttribute('data-class', 'dialogues-element');
+            liEl.setAttribute('data-id', item.id);
+            liEl.innerHTML = `
           <img data-id="img" alt="photo" src="${item.image}"><span data-id="name">${item.name}</span>
         `;
 
-        liEl.addEventListener('click', () => {
-            createChat(dialogueList, chatEl, item.image, item.name, item.id);       //создание окна чата
-        });
-        dialogueListEl.appendChild(liEl);
+            liEl.addEventListener('click', () => {
+                createChat(dialogueList, chatEl, item.image, item.name, item.id, userId);       //создание окна чата
+            });
+            dialogueListEl.appendChild(liEl);
+        }
     }
 }
 
-function createChat(dialogueList1, chatEl, itemImage, itemName, itemId) {        //создание окна чата
+function createChat(dialogueList1, chatEl, itemImage, itemName, itemId, userId) {           //создание окна чата
     chatEl.innerHTML = '';
-    const headerEl = document.createElement('header');          //создание header
+    const headerEl = document.createElement('header');                          //создание header
     headerEl.setAttribute('data-class', 'chat-title');
     headerEl.innerHTML = `
        <img data-id="img" alt="photo" src="${itemImage}" id="${itemId}"><span>${itemName}</span>
@@ -135,18 +144,14 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId) {       
     const centerEl = document.createElement('div');
     centerEl.className = 'center';
 
-    const footerEl = document.createElement('footer');          //создание footer
+    const footerEl = document.createElement('footer');                  //создание footer
     footerEl.setAttribute('data-class', 'chat-send');
     footerEl.innerHTML = `
         <form data-id="form-send" class="form-inline">                        
             <input data-id="message-text"  class="form-control" type="text" placeholder="Введите сообщение" autofocus>
             <button data-id="send" class="btn btn-secondary">Отправить</button>
         </form>
-         <form data-id="form-send2" class="form-inline">
-            <input data-id="message-text2"  class="form-control" type="text" placeholder="Введите сообщение" autofocus>
-            <button data-id="send2" class="btn btn-secondary">Отправить</button>
-        </form>
-    `;                                              //первый отправитель(you), второй(собеседник)
+    `;
     chatEl.appendChild(headerEl);
     chatEl.appendChild(footerEl);
     chatEl.appendChild(centerEl);
@@ -158,69 +163,50 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId) {       
         evt.preventDefault();                                              //первый инпут(you)
         const messageText = messageTextEl.value;
         const date = new Date();
-        const time = date.getHours() + ':' + date.getMinutes();
-        const message = new Message('Алина', messageText, itemId, time);
+        const time = date.getHours() + ':' + date.getMinutes(); // TODO: console.log(date.toTimeString().split(' ')[0]); = ЧЧ:ММ:СС
+        const message = new Message(messageText, itemId, userId, time);
 
         if (messageText !== '') {
             await http.saveMessageList(message);
-            createChat(dialogueList1, chatEl, itemImage, itemName, itemId);
+            createChat(dialogueList1, chatEl, itemImage, itemName, itemId, userId);
         }
         messageTextEl.value = '';
     });
 
-    const send2El = footerEl.querySelector('[data-id=form-send2]');
-    const messageText2El = footerEl.querySelector('[data-id=message-text2]');
-
-    send2El.addEventListener('submit', async (evt) => {        //второй инпут(собеседник)
-        evt.preventDefault();
-        const messageText2 = messageText2El.value;
-        const date = new Date();
-        const time = date.getHours() + ':' + date.getMinutes();
-        const message2 = new Message(itemName, messageText2, itemId, time);
-
-        if (messageText2 !== '') {
-            // messageList.add(message2);
-            await http.saveMessageList(message2);
-            createChat(dialogueList1, chatEl, itemImage, itemName, itemId);
-        }
-        messageText2El.value = '';
-    });
-    rebuildMessageList(centerEl, messageList, itemId, itemName);
-
+    rebuildMessageList(centerEl, messageList, itemId, itemName, userId);
 }
 
-async function rebuildMessageList(centerEl, messageList, itemId, itemName) {//создание листа сообщений
-    const response2 = await http.getMessageList();
-    messageList = await response2.json();
+async function rebuildMessageList(centerEl, messageList, itemId, itemName, userId) {//создание листа сообщений
+    const response = await http.getMessageList();
+    messageList = await response.json();
 
     if (messageList == null) {
         messageList = [];
     }
     for (const item of messageList) {
-        if (item.id == itemId) {
-            if (item.name == itemName) {
-                const divEl = document.createElement('div');
-                divEl.className = 'companion-block';
-                divEl.innerHTML = `
-                <div class="companion-text">
-                    <span>${item.name}: ${item.text}</span><span class="time">     ${item.time}</span>
-                </div>
-            `;
-                centerEl.appendChild(divEl);
-            } else {
-                const divEl = document.createElement('div');
-                divEl.className = 'you-block';
-                divEl.innerHTML = `
+        if ((userId == item.userId) && (itemId == item.id)) {
+            const divEl = document.createElement('div');
+            divEl.className = 'you-block';
+            divEl.innerHTML = `
                 <div class="you-text">
-                    <span>You: ${item.text}</span><span class="time">     ${item.time}</span>
+                    <span>${item.text}</span><span class="time">     ${item.time}</span>
                 </div>
             `;
-                centerEl.appendChild(divEl);
-            }
+            centerEl.appendChild(divEl);
+        }
+        if ((itemId == item.userId) && (userId == item.id)) {
+            const divEl = document.createElement('div');
+            divEl.className = 'companion-block';
+            divEl.innerHTML = `
+                <div class="companion-text">
+                    <span>${item.text}</span><span class="time">     ${item.time}</span>
+                </div>
+            `;
+            centerEl.appendChild(divEl);
         }
     }
 }
 
-loadData();
+
 
 
