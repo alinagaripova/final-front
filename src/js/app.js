@@ -17,6 +17,9 @@ let messageList = [];
 let userList = [];
 
 //todo: оставлять того же пользователя после обновления стр
+//todo: setinterval чата и диалоглиста
+//todo: пушить бэк и фронт
+
 async function loadUsers() {
     try {
         const response = await http.getUsers();
@@ -53,6 +56,7 @@ function buildUserList(usersMenuEl, userList) {                                 
 
 function rebuildUsersAndCompanions(usersEl, evtCurrentTarget, userList) {
     usersEl.innerHTML = '';
+    evtCurrentTarget.className = 'dropdown-item user selected-user';
     usersEl.appendChild(evtCurrentTarget);                                      //прописывается выбранный юзер
 
     const buttonEl = document.createElement('button');
@@ -160,7 +164,7 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId, userId) 
     const messageTextEl = footerEl.querySelector('[data-id=message-text]');
 
     sendEl.addEventListener('submit', async (evt) => {        //событие на кнопке 'отправить' сообщение
-        evt.preventDefault();                                              //первый инпут(you)
+        evt.preventDefault();
         const messageText = messageTextEl.value;
         const date = new Date();
         const time = date.getHours() + ':' + date.getMinutes(); // TODO: console.log(date.toTimeString().split(' ')[0]); = ЧЧ:ММ:СС

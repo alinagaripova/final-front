@@ -3,7 +3,7 @@ export class Dialogue {                         //чат
         this.name = name;
         this.image = image;
         this.id = id;               //id собеседника
-        this.userId = userId;       //id пользователя  TODO: добавил userID в диалогЛист
+        this.userId = userId;       //id пользователя
 
     }
 }
