@@ -149,7 +149,6 @@ li [data-id=img] {
     padding: 0;
     background-color: white;
     border-radius: 10px;
-    /*overflow: auto;*/
 }
 .chat .pre {
     text-align: center;

@@ -2,9 +2,8 @@ import {Dialogue, Message} from "./lib.js";
 import {checkDialogues} from "./valid.js";
 import {Http} from './http.js';
 
-const http = new Http('http://localhost:2525');
-// const http = new Http('https://final-project-aln.herokuapp.com');
-// const startChatEl = document.querySelector('.start-chat');
+// const http = new Http('http://localhost:2525');
+const http = new Http('https://final-project-aln.herokuapp.com');
 const usersMenuEl = document.querySelector('.users-menu');
 const usersEl = document.querySelector('.users');
 const companionsListEl = document.querySelector('.companions-list');
@@ -18,7 +17,6 @@ let userList = [];
 
 //todo: оставлять того же пользователя после обновления стр
 //todo: setinterval чата и диалоглиста
-//todo: пушить бэк и фронт
 
 async function loadUsers() {
     try {
