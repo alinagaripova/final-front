@@ -15,15 +15,32 @@ let dialogueList = [];
 let messageList = [];
 let userList = [];
 
-//todo: оставлять того же пользователя после обновления стр
-//todo: setinterval чата и диалоглиста
+var strGET = window.location.search.replace('?', '').split('=')[1];  //получаем id пользователя из get параметра в адресной строке
+loadUsers(strGET);
 
-async function loadUsers() {
+async function loadUsers(strGET) {
     try {
         const response = await http.getUsers();
         userList = await response.json();
+        if (strGET == undefined) {             //если параметр не определен создаем список пользователй
+            // console.log('не определен');
+            buildUserList(usersMenuEl, userList);
+        } else {
+            // console.log('определен');         // если параметр определен сразу строи чат для пользователя
+            const item = userList.find(x => x.id == strGET);
+            // console.log(item);
+            const spanEl = document.createElement('span');
+            spanEl.className = 'dropdown-item user';
+            spanEl.id = item.id;
+            spanEl.innerHTML = `
+            <img alt="img" src="${item.image}">${item.name}
+            `;
+            usersMenuEl.appendChild(spanEl);
+            loadData();
+            rebuildUsersAndCompanions(usersEl, spanEl, userList);
+        }
 
-        buildUserList(usersMenuEl, userList);
+
     } catch (e) {
         // e -> ошибка
         console.log(e);
@@ -31,8 +48,6 @@ async function loadUsers() {
         console.log('Список диалогов загружен');
     }
 }
-
-loadUsers();
 
 function buildUserList(usersMenuEl, userList) {                                  //создание списка пользователей
     for (const item of userList) {
@@ -45,9 +60,8 @@ function buildUserList(usersMenuEl, userList) {                                 
         usersMenuEl.appendChild(spanEl);
 
         spanEl.addEventListener('click', (evt) => {                 //событие выбор пользователя из списка
-            evt.preventDefault();
-            loadData();
-            rebuildUsersAndCompanions(usersEl, evt.currentTarget, userList);
+            // evt.preventDefault();
+            window.location.href = "./index.html?id=" + evt.currentTarget.id;
         });
     }
 }
@@ -57,14 +71,21 @@ function rebuildUsersAndCompanions(usersEl, evtCurrentTarget, userList) {
     evtCurrentTarget.className = 'dropdown-item user selected-user';
     usersEl.appendChild(evtCurrentTarget);                                      //прописывается выбранный юзер
 
-    const buttonEl = document.createElement('button');
+    const exitEl =document.createElement('div');                       //создание кнопки "выход"
+    exitEl.className = 'exit';
+    exitEl.innerHTML = `
+        <a class="fas fa-sign-out-alt" href="./index.html"></a>
+    `;
+    usersEl.appendChild(exitEl);
+
+    const buttonEl = document.createElement('button');                 //создание кнопки "начать чат с'
     buttonEl.id = 'dropdownMenuButton';
-    buttonEl.className = 'btn btn-secondary dropdown-toggle start-chat';
+    buttonEl.className = 'btn btn-secondary start-chat';
     buttonEl.setAttribute('type', 'button');
     buttonEl.setAttribute('data-toggle', 'dropdown');
     buttonEl.setAttribute('aria-haspopup', 'true');
     buttonEl.setAttribute('aria-labelledby', 'dropdownMenuButton');
-    buttonEl.innerHTML = `Начать чат с:`;
+    buttonEl.innerHTML = `Начать чат с :`;
     const divEl = document.createElement('div');
     divEl.className = 'dropdown-menu companions-list';
     divEl.setAttribute('aria-labelledby', 'dropdownMenuButton');
@@ -72,7 +93,7 @@ function rebuildUsersAndCompanions(usersEl, evtCurrentTarget, userList) {
     usersEl.appendChild(divEl);
 
     const companionsListEl = document.querySelector('.companions-list');
-    for (const item of userList) {                                              //создается список выбора собеседника
+    for (const item of userList) {                                                //создается список выбора собеседника
         if (evtCurrentTarget.id != item.id) {
             const spanEl = document.createElement('span');
             spanEl.className = 'dropdown-item companion';
@@ -140,7 +161,7 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId, userId) 
     const headerEl = document.createElement('header');                          //создание header
     headerEl.setAttribute('data-class', 'chat-title');
     headerEl.innerHTML = `
-       <img data-id="img" alt="photo" src="${itemImage}" id="${itemId}"><span>${itemName}</span>
+       <img data-id="img" alt="photo" src="${itemImage}" id="${itemId}"><span>${itemName}</span> 
     `;
 
     const centerEl = document.createElement('div');
@@ -165,7 +186,7 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId, userId) 
         evt.preventDefault();
         const messageText = messageTextEl.value;
         const date = new Date();
-        const time = date.getHours() + ':' + date.getMinutes(); // TODO: console.log(date.toTimeString().split(' ')[0]); = ЧЧ:ММ:СС
+        const time = date.getHours() + ':' + date.getMinutes(); // TODO: console.log(date.toTimeString().split(' ')[0]); = ЧЧ:ММ:СС  date.toTimeString().split(':')[0]+":"+date.toTimeString().split(':')[1]
         const message = new Message(messageText, itemId, userId, time);
 
         if (messageText !== '') {
@@ -176,9 +197,12 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId, userId) 
     });
 
     rebuildMessageList(centerEl, messageList, itemId, itemName, userId);
+    // setInterval(rebuildMessageList,10000, centerEl, messageList, itemId, itemName, userId);
+
 }
 
 async function rebuildMessageList(centerEl, messageList, itemId, itemName, userId) {//создание листа сообщений
+    // centerEl.innerHTML = " ";
     const response = await http.getMessageList();
     messageList = await response.json();
 
