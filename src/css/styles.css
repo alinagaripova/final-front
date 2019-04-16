@@ -86,7 +86,7 @@ header {
     float: left;
     margin: 3% 0;
 }
-.fas {
+.fa-sign-out-alt {
     text-decoration: none !important;
     color: white;
 }
@@ -101,7 +101,7 @@ header {
     height: 38px;
     vertical-align: center;
 }
-.start-chat img {
+.start-chat i {
     display: none;
 }
 .companions-list {
@@ -226,7 +226,7 @@ footer input:focus {
     outline-color: #59ac9d !important;
 }
 footer button {
-    display: inline-block;
+    display: inline-block !important;
     float: left;
     width: 25%;
     margin: 0 0.5%;
@@ -276,20 +276,24 @@ footer button {
     .users .selected-user {
         color: #59ac9d;
     }
+    .start-chat {
+        width: 30%;
+    }
     .start-chat span{
         display: none;
     }
-    .start-chat img {
+    .start-chat i {
         visibility: visible;
         display: inline-block;
     }
     footer input{
-        max-width: 40%;
+        display: inline-block;
+        margin: auto;
+        min-width: 100%;
         padding: 0;
     }
     footer button {
-        min-width:25%;
-        padding: 0;
+        display: none !important;
     }
 }
 
