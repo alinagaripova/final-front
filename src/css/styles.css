@@ -272,7 +272,7 @@ footer button {
     display: inline-block;
     float: right;
 }
-@media screen and (min-width:200px) and (max-width:1024px) {
+@media screen and (min-width:200px) and (max-width:800px) {
     .users .selected-user {
         color: #59ac9d;
     }
