@@ -10,10 +10,10 @@ const companionsListEl = document.querySelector('.companions-list');
 const dialogueListEl = document.querySelector('.dialogues-list');
 const chatEl = document.querySelector('.chat');
 
-// const companions = Array.from(companionEl);
 let dialogueList = [];
 let messageList = [];
 let userList = [];
+// let messageListOld =[];
 
 var strGET = window.location.search.replace('?', '').split('=')[1];  //получаем id пользователя из get параметра в адресной строке
 loadUsers(strGET);
@@ -85,7 +85,7 @@ function rebuildUsersAndCompanions(usersEl, evtCurrentTarget, userList) {
     buttonEl.setAttribute('data-toggle', 'dropdown');
     buttonEl.setAttribute('aria-haspopup', 'true');
     buttonEl.setAttribute('aria-labelledby', 'dropdownMenuButton');
-    buttonEl.innerHTML = `Начать чат с :`;
+    buttonEl.innerHTML = `<span>Начать чат с :</span><i class="fas fa-caret-square-down"></i>`;
     const divEl = document.createElement('div');
     divEl.className = 'dropdown-menu companions-list';
     divEl.setAttribute('aria-labelledby', 'dropdownMenuButton');
@@ -186,7 +186,7 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId, userId) 
         evt.preventDefault();
         const messageText = messageTextEl.value;
         const date = new Date();
-        const time = date.getHours() + ':' + date.getMinutes(); // TODO: console.log(date.toTimeString().split(' ')[0]); = ЧЧ:ММ:СС  date.toTimeString().split(':')[0]+":"+date.toTimeString().split(':')[1]
+        const time = date.toTimeString().split(':')[0]+":"+date.toTimeString().split(':')[1];
         const message = new Message(messageText, itemId, userId, time);
 
         if (messageText !== '') {
@@ -196,15 +196,22 @@ function createChat(dialogueList1, chatEl, itemImage, itemName, itemId, userId) 
         messageTextEl.value = '';
     });
 
-    rebuildMessageList(centerEl, messageList, itemId, itemName, userId);
-    // setInterval(rebuildMessageList,10000, centerEl, messageList, itemId, itemName, userId);
+    rebuildMessageList(centerEl, messageList, itemId, itemName, userId, messageListOld);
+    // setInterval(rebuildMessageList,1000, centerEl, messageList, itemId, itemName, userId);
 
 }
 
-async function rebuildMessageList(centerEl, messageList, itemId, itemName, userId) {//создание листа сообщений
+async function rebuildMessageList(centerEl, messageList, itemId, itemName, userId, messageListOld) {//создание листа сообщений
     // centerEl.innerHTML = " ";
     const response = await http.getMessageList();
     messageList = await response.json();
+
+    // console.log("1-ый old " + (messageListOld));
+    // messageListOld = messageList;
+    // for (const item of messageListOld) {
+    //     console.log("2-ой old " + item);
+    // }
+
 
     if (messageList == null) {
         messageList = [];
@@ -231,6 +238,7 @@ async function rebuildMessageList(centerEl, messageList, itemId, itemName, userI
             centerEl.appendChild(divEl);
         }
     }
+    // setTimeout(rebuildMessageList, 1000, centerEl, messageList, itemId, itemName, userId, messageListOld);
 }
 
 

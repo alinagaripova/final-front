@@ -101,6 +101,9 @@ header {
     height: 38px;
     vertical-align: center;
 }
+.start-chat img {
+    display: none;
+}
 .companions-list {
     background-color: #f2f7f6;;
 }
@@ -268,5 +271,25 @@ footer button {
     color: darkgray;
     display: inline-block;
     float: right;
+}
+@media screen and (min-width:200px) and (max-width:1024px) {
+    .users .selected-user {
+        color: #59ac9d;
+    }
+    .start-chat span{
+        display: none;
+    }
+    .start-chat img {
+        visibility: visible;
+        display: inline-block;
+    }
+    footer input{
+        max-width: 40%;
+        padding: 0;
+    }
+    footer button {
+        min-width:25%;
+        padding: 0;
+    }
 }
 
