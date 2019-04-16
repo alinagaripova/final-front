@@ -227,6 +227,7 @@ async function rebuildMessageList(centerEl, messageList, itemId, itemName, userI
         }
     }
     messageListOld = messageList;
+    centerEl.scrollTop = 9999;
     setTimeout(rebuildMessageList, 1000, centerEl, messageList, itemId, itemName, userId, messageListOld);
 }
 
