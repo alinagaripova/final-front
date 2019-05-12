@@ -22,7 +22,7 @@ async function loadUsers(strGET) {
     try {
         const response = await http.getUsers();
         userList = await response.json();
-        if (strGET == undefined) {             //если параметр не определен создаем список пользователй
+        if (strGET == undefined) {              //если параметр не определен создаем список пользователй
             buildUserList(usersMenuEl, userList);
         } else {
             // если параметр определен сразу строи чат для пользователя
